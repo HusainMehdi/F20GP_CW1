@@ -21,17 +21,11 @@ public class Move_Control : MonoBehaviour
     void Awake()
     {
         controls = new PlayerControls();
-        controls.Gameplay.Grow.performed += context => Grow();
+        // controls.Gameplay.Grow.performed += context => Grow();
 
         controls.Gameplay.Move.performed += context => move = context.ReadValue<Vector2>();
         controls.Gameplay.Move.canceled += context => move = Vector2.zero;
 
-    }
-
-
-    void Grow()
-    {
-        transform.localScale *= 1.1f;
     }
 
     void Update()
@@ -53,6 +47,16 @@ public class Move_Control : MonoBehaviour
         // Vector3 m = new Vector3(move.x, 0.0f, move.y) * Time.deltaTime * speed;
         // player.Move(m);
     }
+
+    public float kickStrength = 1.0f;
+ 
+    void OnCollisionEnter(Collision collision) {
+ 
+        ContactPoint contact = collision.contacts[0];
+        Rigidbody otherRigidbody = collision.rigidbody;
+ 
+        otherRigidbody.AddForce(-contact.normal * kickStrength, ForceMode.Impulse);
+}
 
     void OnEnable()
     {
